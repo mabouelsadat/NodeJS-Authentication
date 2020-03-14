@@ -3,10 +3,12 @@ const verify = require("./verifyToken");
 const User = require("../model/User");
 
 router.get("/", verify, (req, res) => {
-  res.send(req.user);
-  //   const currentUser = User.findOne({ _id: req.user });
-  //   console.log(currentUser);
-  //   res.send(currentUser.tree.name);
+  User.findOne({ _id: req.user }, function(err, result) {
+    if (!result) {
+      res.sendStatus(404).send(err);
+    }
+    return res.send({ id: result.id, name: result.name, email: result.email });
+  });
 });
 
 module.exports = router;
